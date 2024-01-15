@@ -14,12 +14,23 @@ export default function TodoList() {
   const [newTask, setNewTask] = useState<string>('');
 
   useEffect(() => {
-    // Načítání úkolů z databáze při načtení komponenty
     fetch('/api/tasks')
-      .then((response) => response.json())
-      .then((data) => setTasks(data))
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setTasks(data);
+        } else {
+          throw new Error('Invalid data received from the API');
+        }
+      })
       .catch((error) => console.error('Chyba při načítání dat:', error));
   }, []);
+  
 
   const addTask = () => {
     if (newTask.trim() === '') return;
