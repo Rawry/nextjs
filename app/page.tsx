@@ -2,6 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import Task from './models/Task';
+import {
+  TaskListContainer,
+  TaskItem,
+  TaskTitle,
+  TaskDate,
+  TaskButton,
+  Input,
+  AddTaskWrapper,
+  Heading,
+  AddButton
+} from './TaskListStyles';
 
 export default function TodoList() {
   let emptyTask : Task = {
@@ -102,30 +113,36 @@ export default function TodoList() {
 	};
 
   return (
-    <div>
-      <h1>Seznam úkolů</h1>
-      <div>
-        <input
+    <TaskListContainer>
+       <Heading>Seznam úkolů</Heading>
+      <AddTaskWrapper>
+        <Input
           type="text"
           placeholder="Přidat nový úkol"
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
         />
-        <button onClick={addTask}>Přidat</button>
-      </div>
+        <AddButton onClick={addTask}>Přidat</AddButton>
+      </AddTaskWrapper>
       <ul>
         {tasks.map((task) => (
-          <li key={task.id}>
+          <TaskItem key={task.id}>
             <input
               type="checkbox"
               checked={task.completed}
               onChange={() => confirmation(task.id)}
             />
-            {task.title}
-            <button onClick={() => deletion(task.id)}>Smazat</button>
-          </li>
+            <TaskTitle>{task.title}</TaskTitle>
+            <TaskButton onClick={() => deletion(task.id)}>Smazat</TaskButton>
+            <TaskDate>
+              {task.createdAt
+                ? `Vytvořeno: ${new Date(task.createdAt).toLocaleDateString()}`
+                : 'Datum není k dispozici'}
+            </TaskDate>
+          </TaskItem>
         ))}
       </ul>
-    </div>
+    </TaskListContainer>
   );
 }
+
